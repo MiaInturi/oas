@@ -1,0 +1,21 @@
+openapi: 3.1.0
+info:
+  title: x-doc-refs preserve fixture
+  version: 1.0.0
+x-doc-refs:
+  - id: purpose
+    name: Purpose
+    $ref: ./docs/purpose.md
+  - id: auth
+    name: Authentication
+    $ref: ./docs/auth.md
+paths:
+  /pets:
+    get:
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: ./schemas/Pet.yaml

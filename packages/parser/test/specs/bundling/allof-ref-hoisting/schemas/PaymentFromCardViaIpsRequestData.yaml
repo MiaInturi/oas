@@ -1,0 +1,7 @@
+allOf:
+  - $ref: ./PaymentFromCardRequestData.yaml
+  - type: object
+    properties:
+      receiverCardRequisites:
+        $ref: ./PaymentFromCardRequestData.yaml#/allOf/1/properties/senderCardRequisites
+        description: Receiver card requisites

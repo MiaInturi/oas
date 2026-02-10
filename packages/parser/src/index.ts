@@ -3,6 +3,7 @@ import type { APIDocument, ErrorDetails, ParserOptions, ValidationResult, Warnin
 import { $RefParser, dereferenceInternal, MissingPointerError } from '@apidevtools/json-schema-ref-parser';
 
 import { isOpenAPI, isSwagger } from './lib/assertions.js';
+import { hoistBundledSchemas } from './lib/hoistBundledSchemas.js';
 import { convertOptionsForParser, normalizeArguments, repairSchema } from './util.js';
 import { validateSchema } from './validators/schema.js';
 import { validateSpec } from './validators/spec.js';
@@ -46,14 +47,59 @@ export async function bundle<S extends APIDocument = APIDocument>(
 ): Promise<S> {
   const args = normalizeArguments<S>(api);
   const parserOptions = convertOptionsForParser(options);
+  const xDocRefsSnapshot = await snapshotXDocRefs(args.path, args.schema, parserOptions);
 
   const parser = new $RefParser<S>();
   await parser.bundle(args.path, args.schema, parserOptions);
+  await hoistBundledSchemas(parser, parserOptions);
+
+  if (xDocRefsSnapshot.isPresent && isRecord(parser.schema)) {
+    (parser.schema as Record<string, unknown>)['x-doc-refs'] = cloneValue(xDocRefsSnapshot.value);
+  }
 
   // If necessary, repair the schema of any anomalies and quirks.
   repairSchema(parser.schema, args.path);
 
   return parser.schema;
+}
+
+async function snapshotXDocRefs<S extends APIDocument = APIDocument>(
+  path: string,
+  schema: S | undefined,
+  parserOptions: ReturnType<typeof convertOptionsForParser>,
+): Promise<{ isPresent: boolean; value: unknown }> {
+  if (isRecord(schema) && hasOwn(schema, 'x-doc-refs')) {
+    return { isPresent: true, value: cloneValue((schema as Record<string, unknown>)['x-doc-refs']) };
+  }
+
+  if (!path) {
+    return { isPresent: false, value: undefined };
+  }
+
+  const parser = new $RefParser<Record<string, unknown>>();
+  const source = await parser.parse(path, undefined, parserOptions);
+
+  if (!isRecord(source) || !hasOwn(source, 'x-doc-refs')) {
+    return { isPresent: false, value: undefined };
+  }
+
+  return { isPresent: true, value: cloneValue(source['x-doc-refs']) };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function hasOwn(value: Record<string, unknown>, key: string): boolean {
+  return Object.keys(value).includes(key);
+}
+
+function cloneValue<T>(value: T): T {
+  if (typeof globalThis.structuredClone === 'function') {
+    return globalThis.structuredClone(value);
+  }
+
+  return JSON.parse(JSON.stringify(value)) as T;
 }
 
 /**

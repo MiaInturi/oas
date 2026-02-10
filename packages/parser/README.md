@@ -21,7 +21,7 @@
 
 `@readme/openapi-parser` is a library to validate and parse [OpenAPI](https://openapis.org) and Swagger API definitions. It is a hard fork of [@apidevtools/swagger-parser](https://npm.im/@apidevtools/swagger-parser) and offers support for improved validation error messages as well as error leveling.
 
----
+This package is part of a fork of [@readmeio/oas](https://github.com/readmeio/oas) and extends the upstream parser with a stronger bundling pipeline for production OpenAPI workflows. Along with improved validation error messages and error leveling, bundled output is normalized to component refs (`#/components/schemas/...`), deep/composed schema refs are rewritten consistently, `discriminator.mapping` filename values are converted to component refs, and top-level `x-doc-refs` metadata is preserved.
 
 - [Installation](#installation)
 - [Features](#features)
@@ -211,12 +211,21 @@ console.log(api.components.schemas.pet.properties.name); // => { type: "string" 
 
 Bundles all referenced files and URLs into a single API definition that only has _internal_ `$ref` pointers. This lets you split up your definition however you want while you're building it, but later combine all those files together when it's time to package or distribute the API definition to other people. The resulting definition size will be small, since it will still contain _internal_ JSON references rather than being fully-dereferenced.
 
+In this fork, `bundle()` also runs a post-processing normalization pass so output is more OpenAPI-idiomatic and stable for downstream tooling:
+
+- External schema files are hoisted into `#/components/schemas/...`.
+- Internal schema refs are rewritten from fragile `#/paths/...` pointers to `#/components/schemas/...`.
+- Deep/composed structures (`allOf`/`oneOf`/`anyOf`, nested properties, array item schemas) are normalized.
+- `discriminator.mapping` filename values are rewritten to component refs.
+- Top-level `x-doc-refs` metadata is preserved.
+
 ```ts
 import { bundle } from '@readme/openapi-parser';
 
 const api = await bundle(myAPI);
 
-console.log(api.components.schemas.pet); // => { $ref: "#/components/schemas~1pet.yaml" }
+console.log(api.paths['/pets/{id}'].get.responses['200'].content['application/json'].schema);
+// => { $ref: "#/components/schemas/Pet" }
 ```
 
 ### `.parse()`

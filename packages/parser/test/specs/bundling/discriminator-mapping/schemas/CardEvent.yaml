@@ -1,0 +1,6 @@
+allOf:
+  - $ref: ./EventBase.yaml
+  - type: object
+    properties:
+      cardToken:
+        type: string

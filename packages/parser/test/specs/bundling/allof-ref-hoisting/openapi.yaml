@@ -1,0 +1,16 @@
+openapi: 3.1.0
+info:
+  title: allOf ref hoisting fixture
+  version: 1.0.0
+paths:
+  /payment-requests:
+    post:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ./schemas/PaymentFromCardViaIpsRequestData.yaml
+      responses:
+        '200':
+          description: ok

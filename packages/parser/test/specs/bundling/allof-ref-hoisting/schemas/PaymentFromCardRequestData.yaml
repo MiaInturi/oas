@@ -1,0 +1,7 @@
+allOf:
+  - type: object
+  - type: object
+    properties:
+      senderCardRequisites:
+        $ref: ./CardRequisites.yaml
+        description: Sender card requisites

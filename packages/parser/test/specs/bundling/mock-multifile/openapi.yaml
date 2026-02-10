@@ -1,0 +1,28 @@
+openapi: 3.0.3
+info:
+  title: Mock multi-file API
+  version: 1.0.0
+paths:
+  /pets/{id}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: './components/schemas/Id.yaml'
+      responses:
+        '200':
+          description: Pet response
+          content:
+            application/json:
+              schema:
+                $ref: './components/schemas/Pet.yaml'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string

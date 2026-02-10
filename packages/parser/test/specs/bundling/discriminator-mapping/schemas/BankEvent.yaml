@@ -1,0 +1,6 @@
+allOf:
+  - $ref: ./EventBase.yaml
+  - type: object
+    properties:
+      bankId:
+        type: string

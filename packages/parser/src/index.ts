@@ -3,7 +3,7 @@ import type { APIDocument, ErrorDetails, ParserOptions, ValidationResult, Warnin
 import { $RefParser, dereferenceInternal, MissingPointerError } from '@apidevtools/json-schema-ref-parser';
 
 import { isOpenAPI, isSwagger } from './lib/assertions.js';
-import { hoistBundledSchemas } from './lib/hoistBundledSchemas.js';
+import { hoistBundledSchemas } from './lib/hoistBundledSchemas/hoistBundledSchemas.js';
 import { convertOptionsForParser, normalizeArguments, repairSchema } from './util.js';
 import { validateSchema } from './validators/schema.js';
 import { validateSpec } from './validators/spec.js';

@@ -1,0 +1,14 @@
+type: object
+discriminator:
+  propertyName: eventType
+  mapping:
+    created: PetCreatedEvent.yaml
+    adopted: PetAdoptedEvent.yaml
+required:
+  - eventType
+properties:
+  eventType:
+    type: string
+oneOf:
+  - $ref: ./PetCreatedEvent.yaml
+  - $ref: ./PetAdoptedEvent.yaml

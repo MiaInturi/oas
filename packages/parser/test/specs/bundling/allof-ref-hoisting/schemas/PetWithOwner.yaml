@@ -1,0 +1,7 @@
+allOf:
+  - $ref: ./PetBase.yaml
+  - type: object
+    properties:
+      owner:
+        $ref: ./PetBase.yaml#/allOf/1/properties/category
+        description: Pet owner details

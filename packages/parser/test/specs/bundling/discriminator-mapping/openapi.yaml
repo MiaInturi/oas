@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
-  title: discriminator mapping fixture
+  title: Petstore discriminator mapping fixture
   version: 1.0.0
 paths:
-  /events:
+  /pet-events:
     get:
       responses:
         '200':
@@ -11,4 +11,4 @@ paths:
           content:
             application/json:
               schema:
-                $ref: ./schemas/EventBase.yaml
+                $ref: ./schemas/PetEventBase.yaml

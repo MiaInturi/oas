@@ -1,6 +1,6 @@
 allOf:
-  - $ref: ./EventBase.yaml
+  - $ref: ./PetEventBase.yaml
   - type: object
     properties:
-      cardToken:
+      ownerId:
         type: string

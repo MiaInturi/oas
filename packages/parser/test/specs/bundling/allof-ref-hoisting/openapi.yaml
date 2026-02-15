@@ -1,16 +1,16 @@
 openapi: 3.1.0
 info:
-  title: allOf ref hoisting fixture
+  title: Petstore allOf ref hoisting fixture
   version: 1.0.0
 paths:
-  /payment-requests:
+  /pets:
     post:
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: ./schemas/PaymentFromCardViaIpsRequestData.yaml
+              $ref: ./schemas/PetWithOwner.yaml
       responses:
         '200':
           description: ok

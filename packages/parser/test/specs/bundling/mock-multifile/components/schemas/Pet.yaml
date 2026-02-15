@@ -8,4 +8,4 @@ properties:
   name:
     type: string
   owner:
-    $ref: './User.yaml'
+    $ref: './Owner.yaml'

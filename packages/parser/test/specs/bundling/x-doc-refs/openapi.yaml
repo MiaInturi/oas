@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: x-doc-refs preserve fixture
+  title: Petstore x-doc-refs fixture
   version: 1.0.0
 x-doc-refs:
   - id: purpose

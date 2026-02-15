@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Mock multi-file API
+  title: Petstore multi-file API
   version: 1.0.0
 paths:
   /pets/{id}:
